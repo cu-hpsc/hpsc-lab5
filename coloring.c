@@ -28,8 +28,8 @@ unsigned int compact(unsigned int *storage, unsigned int *props, unsigned int pr
 // colors vertices from `candidates` which have minimal hash of their uncolored
 // neighbors, flagging any of their neighbors as dropped.
 // (updates `colorset` and `dropset`)
-void colorverts(unsigned int *colorset, unsigned int colors,
-		unsigned int *dropset, unsigned int *candidateset,
+void colorverts(volatile unsigned int *colorset, unsigned int colors,
+		volatile unsigned int *dropset, unsigned int *candidateset,
 		unsigned int candidates, unsigned int *offsets,
 		unsigned int *neighbors)
 {
