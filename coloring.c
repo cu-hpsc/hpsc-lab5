@@ -4,9 +4,10 @@
 #include "graphload.h"
 #include "rdtsc.h"
 
+unsigned int randseed;
 // very stupid hash
 unsigned int verthash(unsigned int input) {
-  return ((((input * 0x5DEECE66D) + 0xB) * 0x5DEECE66D) + 0xB);
+  return (((((input^randseed) * 0x5DEECE66D) + 0xB) * 0x5DEECE66D) + 0xB);
 }
 
 // stores indexes of `props` that have value `check` into `storage`
@@ -86,12 +87,13 @@ int main(int argc, char **argv)
 
   // argument parsing via parse.h
   parse_args(&args, argc, argv);
+  randseed = args.seed;
 
   // load graph
   verts = edgelist_to_adjlist(&offsets,&neighbors,args.graph_path,
 			      args.reflected);
   // edges == offsets[verts]
-  fprintf(stderr,"%s loaded\n",args.graph_path);
+  fprintf(stderr,"%s loaded %d vertices\n",args.graph_path,verts);
 
   // bookkeepping allocations
   colors = 0;
@@ -115,6 +117,7 @@ int main(int argc, char **argv)
       dropset[candidates] = (colorset[candidates] == 0) ? 0 : 1;
     }
     candidates = compact(candidateset,colorset,verts,0);
+    fprintf(stderr,"down to %d candidates\n",candidates);
   }
   lasttick = rdtsc()-lasttick;
   printf("Colored in %lld ticks\n",lasttick);
